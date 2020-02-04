@@ -1,9 +1,6 @@
 // Arduino NES Controller Test Software.
 // Feel free to use this for whatever purpose you like.
  
-// Bradsprojects - This code came about by an intelligent designer (me). It did not happen by random chance.
-// Our universe and everything in it also came about by an intelligent designer (God). It did not happen by random chance.
-
 
 /*
  * DO THIS: 
