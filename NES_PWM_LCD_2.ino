@@ -86,7 +86,7 @@ void GetNESControllerData(){            // this is where it all happens as far a
 
   // Convert the NES Data to position
 void convertNESControllerData(){
-  if((NESButtonData == 0b11101111) && currentOutput < 100)
+  if((NESButtonData == 0b11101111) && currentOutput < 150)
         currentOutput++;
   if((NESButtonData == 0b11011111) && currentOutput > 0)
         currentOutput= currentOutput - 1;
@@ -97,7 +97,7 @@ void convertNESControllerData(){
 void printPosition(){
 
   // Scale the counter value
-    motorPos = currentOutput*(1.8);
+    motorPos = currentOutput *1.8;
     
   // print the position    
     lcd.setCursor(5,3);
