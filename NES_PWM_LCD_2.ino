@@ -1,6 +1,39 @@
-// Arduino NES Controller Test Software.
-// Feel free to use this for whatever purpose you like.
- 
+//////////////////////////////////////////////////////
+//    YOU WILL NEED TO DOWNLOAD TWO LIBRARIES       //
+//                                                  //
+//    NewLiquidCrystal_lib                          //
+//            &                                     //
+//    LiquidCrystali2C                              //
+//                                                  //
+//    JUST GOOGLE SEARCH IT AND INCLUDE THE .ZIP    //
+//                                                  //
+//////////////////////////////////////////////////////
+/*
+ * **********WIRING DIAGRAM*****************
+ * 
+ * ***LCD-Pins*******Arduino-Pins***********
+ * 
+ *      Vcc-----------5V
+ *      Gnd-----------Gnd
+ *      SDA-----------A4
+ *      SLC-----------A5
+ *      
+ * *********NES Pinout-Diagram**************
+ * 
+ *      1
+ *    2 3
+ *    4 5
+ *    6 7
+ * 
+ * ***NES-Pins*******Arduino-Pins***********
+ *      
+ *      1---------------Gnd
+ *      2---------------5V
+ *      3---------------12
+ *      5---------------11
+ *      7---------------9
+ *      
+ */
 
 /*
  * DO THIS: 
@@ -40,17 +73,20 @@ LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7);
 int currentOutput = 0;
 int motorPos = 0;
 
-byte NESData = 9;       // this is the pin that the Data connection is connected to
+byte NESData = 9;           // this is the pin that the Data connection is connected to
 byte NESLatch = 11;         // this is the pin that the Latch (otherwise known as strobe) connection is connected to
 byte NESClock = 12;         // this is the pin that the Clock connection is connected to
 byte NESButtonData;         // This is where we will store the received data that comes from the NES Control Pad
- 
-void setup() {              // let's get a few things setup before we get into the main code
+
+  // let's get a few things setup before we get into the main code
+void setup() {                
+      
     Serial.begin(9600);         // serial data will be sent at 9600bps
     pinMode(NESLatch, OUTPUT);  // Latch connection is an output
     pinMode(NESClock, OUTPUT);  // Clock connection is an output
     pinMode(NESData, INPUT);    // Data connection is an Input (because we need to receive the data from the control pad)
 
+  // Set up the LCD and print out the main screen
     lcd.begin(20,4); 
     lcd.setBacklightPin(3,POSITIVE);
     lcd.setBacklight(HIGH);
@@ -74,7 +110,7 @@ void loop() {                       // we will run this code in a constant loop 
 void GetNESControllerData(){            // this is where it all happens as far as grabbing the NES control pad data
     digitalWrite(NESLatch, HIGH);       // we need to send a clock pulse to the latch (strobe connection)...
     digitalWrite(NESLatch, LOW);        // this will cause the status of all eight buttons to get saved within the 4021 chip in the NES control pad.
-    for(int x=0; x<=7; x++){         // Now we need to transmit the eight bits of data serially from the NES control pad to the Arduino
+    for(int x=0; x<=7; x++){            // Now we need to transmit the eight bits of data serially from the NES control pad to the Arduino
         bitWrite(NESButtonData,x,digitalRead(NESData)); // one by one, we will read from the NESData line and store each bit in the NESButtonData variable.
         digitalWrite(NESClock, HIGH);                   // once each bit is saved, we send a clock pulse to the NES clock connection...
         digitalWrite(NESClock, LOW);                    // this will now shift all bits in the 4021 chip in the NES control pad, so we can read the next bit.
@@ -90,13 +126,14 @@ void convertNESControllerData(){
 
 }
 
-//Finish this funcion below...
+
+  // Function to print out the position in degrees
 void printPosition(){
 
-  // Scale the counter value
+  // Convert position to degrees
     motorPos = currentOutput *1.8;
     
-  // print the position    
+  // Print the position    
     lcd.setCursor(5,3);
     lcd.print(motorPos);
     lcd.print(" degrees");
